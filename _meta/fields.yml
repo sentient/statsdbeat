@@ -1,0 +1,38 @@
+- key: statsdbeat
+  title: statsdbeat
+  description:
+  fields:
+    - name: counter
+      type: group
+      fields:
+        
+        - name: bucket
+          type: text
+          description: >
+            statsd bucket
+        
+        - name: val
+          type: long
+          description: >
+            value for the bucket
+        
+        - name: type
+          type: keyword
+          description: >
+            counter type ?
+      
+        - name: testtags
+          type: group
+          fields:
+          
+          - name: a
+            type: keyword
+
+          - name: b
+            type: keyword
+
+        - name: tags
+          type: object
+          object_type: keyword
+          description: >
+            Contains user tags
