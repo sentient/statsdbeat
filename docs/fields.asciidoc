@@ -398,21 +398,72 @@ Kubernetes container image
 [[exported-fields-statsdbeat]]
 == statsdbeat fields
 
-None
+Statsdbeat module listens for UDP messages (default localhost:8125) that follows the statsd protocol.  The messages are converted to beat.Events and on fixed interval send to Elastic Search.
 
 
 
-*`counter.bucket`*::
+
+*`statsd.bucket`*::
 +
 --
 type: text
+
+example: accounts.authentication.password.failure.no_email_found
 
 statsd bucket
 
 
 --
 
-*`counter.val`*::
+*`statsd.namespace`*::
++
+--
+type: text
+
+example: accounts.authentication
+
+statsd bucket namespace
+
+
+--
+
+*`statsd.section`*::
++
+--
+type: keyword
+
+example: password
+
+statsd bucket section
+
+
+--
+
+*`statsd.target`*::
++
+--
+type: keyword
+
+example: failure
+
+statsd bucket target (noun)
+
+
+--
+
+*`statsd.action`*::
++
+--
+type: keyword
+
+example: no_email_found
+
+statsd bucket action (past tense)
+
+
+--
+
+*`statsd.val`*::
 +
 --
 type: long
@@ -422,37 +473,23 @@ value for the bucket
 
 --
 
-*`counter.type`*::
+*`statsd.type`*::
 +
 --
 type: keyword
 
-counter type ?
+The type of statsd counter  gauge  histogram.
 
 
 --
 
-
-*`counter.testtags.a`*::
-+
---
-type: keyword
-
---
-
-*`counter.testtags.b`*::
-+
---
-type: keyword
-
---
-
-*`counter.tags`*::
+*`statsd.ctx`*::
 +
 --
 type: object
 
 Contains user tags
+     
 
 
 --

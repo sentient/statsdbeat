@@ -5,8 +5,7 @@
 statsdbeat:
   # Defines how often an event is sent to the output
   period: 10s
-  statsdserver: ":8125"
-  storage: "./test/better_use_spool"
+  statsdserver: ":8125"  
 
 #================================ General =====================================
 
@@ -31,7 +30,7 @@ statsdbeat:
 # These settings can be adjusted to load your own template or overwrite existing ones.
 
 # Set to false to disable template loading.
-#setup.template.enabled: true
+setup.template.enabled: true
 
 # Template name. By default the template name is "statsdbeat-%{[beat.version]}"
 # The template name and pattern has to be set in case the elasticsearch index pattern is modified.
@@ -49,7 +48,7 @@ statsdbeat:
 setup.template.overwrite: true
 
 # Elasticsearch template settings
-setup.template.settings:
+# setup.template.settings:
 
   # A dictionary of settings to place into the settings.index dictionary
   # of the Elasticsearch template. For more details, please check

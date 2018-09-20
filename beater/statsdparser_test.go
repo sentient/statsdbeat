@@ -96,8 +96,9 @@ func TestParseBeat(t *testing.T) {
 			args{"myCounter:1|c"},
 			&beat.Event{
 				Fields: common.MapStr{
-					"val":    1,
-					"bucket": "myCounter",
+					"val":     1,
+					"bucket":  "myCounter",
+					"context": map[string]interface{}{},
 				},
 			},
 			false,
@@ -108,8 +109,10 @@ func TestParseBeat(t *testing.T) {
 				Fields: common.MapStr{
 					"val":    1,
 					"bucket": "myCounter",
-					"myTag":  "error",
-					"tagB":   "2",
+					"context": map[string]interface{}{
+						"myTag": "error",
+						"tagB":  "2",
+					},
 				},
 			},
 			false,
@@ -132,6 +135,43 @@ func TestParseBeat(t *testing.T) {
 
 			if !reflect.DeepEqual(got.Fields, tt.want.Fields) {
 				t.Errorf("ParseBeat() = %v, want %v", got.Fields, tt.want.Fields)
+			}
+		})
+	}
+}
+
+func Test_splitBucket(t *testing.T) {
+	type args struct {
+		bucket string
+	}
+	tests := []struct {
+		name          string
+		args          args
+		wantNamespace string
+		wantSection   string
+		wantTarget    string
+		wantAction    string
+	}{
+		{"simple", args{"counter"}, "", "", "counter", ""},
+		{"simple", args{"account.login"}, "", "", "account", "login"},
+		{"simple", args{"authentication.password.failure"}, "", "authentication", "password", "failure"},
+		{"simple", args{"module.authentication.password.failure"}, "module", "authentication", "password", "failure"},
+		{"simple", args{"accounts.authentication.password.failure.no_email_found"}, "accounts", "authentication", "password", "failure.no_email_found"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotNamespace, gotSection, gotTarget, gotAction := splitBucket(tt.args.bucket)
+			if gotNamespace != tt.wantNamespace {
+				t.Errorf("splitBucket() gotNamespace = %v, want %v", gotNamespace, tt.wantNamespace)
+			}
+			if gotSection != tt.wantSection {
+				t.Errorf("splitBucket() gotSection = %v, want %v", gotSection, tt.wantSection)
+			}
+			if gotTarget != tt.wantTarget {
+				t.Errorf("splitBucket() gotTarget = %v, want %v", gotTarget, tt.wantTarget)
+			}
+			if gotAction != tt.wantAction {
+				t.Errorf("splitBucket() gotAction = %v, want %v", gotAction, tt.wantAction)
 			}
 		})
 	}

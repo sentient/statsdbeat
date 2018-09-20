@@ -1,12 +1,47 @@
-Notes.md
+Notes
+=====
+
 
 Collect batches of statsd events. Keep them in memory. Mark every batch with a unique ID.
 When closing event is received, flush the pending batches to disk.
 On startup; find any pending batches and try to publish them first.
 
 
+# Naming your buckets
 
-https://discuss.elastic.co/t/flushing-after-yourself/129204/4
+[Source](https://matt.aimonetti.net/posts/2013/06/26/practical-guide-to-graphite-monitoring/)
+
+Properly naming your metrics is critical to avoid conflicts, confusing data and potentially wrong interpretation later on. I like to organize metrics using the following schema:
+
+```
+1 <namespace>.<instrumented section>.<target (noun)>.<action (past tense verb)>
+```
+Example:
+```
+1 accounts.authentication.password.attempted
+2 accounts.authentication.password.succeeded
+3 accounts.authentication.password.failed
+```
+I use nouns to define the target and past tense verbs to define the action. This becomes a useful convention when you need to nest metrics. In the above example, let’s say I want to monitor the reasons for the failed password authentications. Here is how I would organize the extra stats:
+```
+1 accounts.authentication.password.failure.no_email_found
+2 accounts.authentication.password.failure.password_check_failed
+3 accounts.authentication.password.failure.password_reset_required
+```
+As you can see, I used failure instead of failed in the stat name. The main reason is to avoid conflicting data. failed is an action and already has a data series allocated, if I were to add nested data using failed, the data would be collected but the result would be confusing. The other reason is because when we will graph the data, we will often want to use a wildcard * to collect all nested data in a series.
+
+Graphite wild card usage example on counters:
+
+1 accounts.authentication.password.failure.*
+This should give us the same value as accounts.authentication.password.failed, so really, we should just collect the more detailed version and get rid of accounts.authentication.password.failed.
+
+Following this naming convention should really help your data stay clean and easy to manage.
+
+
+
+# Notes 
+
+[Source](https://discuss.elastic.co/t/flushing-after-yourself/129204/4)
 
 - producer publishes single events
 - pipeline returns ordered ACK to producer or global ACK handler.
@@ -14,11 +49,8 @@ https://discuss.elastic.co/t/flushing-after-yourself/129204/4
 - pipeline always ACKs events. From producer point of view, there is no event drop.
   => event drops, infinite retry, is configured and handled in the publisher pipeline.
 
-  https://discuss.elastic.co/t/flushing-after-yourself/129204/8
   
-
-
-
+  
 # StatsD Datagram
 StatsD clients encode metrics into simple, text-based, UDP datagrams. Though your client takes care of forming these datagrams, by exploring the format we can learn important information about features that the StatsD protocol supports.
 
@@ -82,3 +114,36 @@ unique_users:bar|s
 ```
 
 After a flush, unique_users will reset to 0 until another metric is received.
+
+
+# Kibana
+
+statsd goes to the stasdbeat- index
+you can use wildcards on the buckets
+
+bucket:*password.fail*
+
+
+
+========
+
+See processor_test.go
+```
+{
+			field: common.Field{
+				Type: "object", ObjectType: "scaled_float",
+				Name: "core.*.pct", ScalingFactor: 100, ObjectTypeMappingType: "float",
+			},
+			expected: common.MapStr{
+				"core.*.pct": common.MapStr{
+					"mapping": common.MapStr{
+						"type":           "scaled_float",
+						"scaling_factor": 100,
+					},
+					"match_mapping_type": "float",
+					"path_match":         "core.*.pct",
+				},
+			},
+		},
+	}
+```
