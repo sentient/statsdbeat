@@ -5,7 +5,8 @@ Using the beat framework to send application statistics to ElasticSearch. The be
 
 References:
 + [Etsy Statsd metric types](https://github.com/etsy/statsd/blob/master/docs/metric_types.md)
-    + [Statsd backend](https://github.com/markkimsal/statsd-elasticsearch-backend), NPM module for statsd to output to ElasticSearch  
+  - [Elastic Search backend](https://github.com/markkimsal/statsd-elasticsearch-backend), 
+       (NPM module for Etsty Statsd to output to ElasticSearch )
 
 
 # What we do 
@@ -14,12 +15,13 @@ We listen for UDP pacakges. And forwards them as `beat.Event` into Elastic Searc
 
 Support
 + Following statsd types are supported
-    | Type          | Example                   |
-    | ------------- | -------------             |
-    | Counters      | `platform-insights.test.counter.tick:1|c`  |
+  
+    | Type          | Example                                           |
+    | ------------- | --------------------------------------------------|
+    | Counters      | `platform-insights.test.counter.tick:1|c`         |
     | Gauge         | `platform-insights.test.gauge.num_goroutine:1|g`  |
-    | Histogram     | `platform-insights.test.histogram.my_histo:17|h`
-    | Timing        | `platform-insights.test.timing.ping:10|ms`
+    | Histogram     | `platform-insights.test.histogram.my_histo:17|h`  |
+    | Timing        | `platform-insights.test.timing.ping:10|ms`        |
 
 + Tags (InfluxDB notation  `counter,tagName=tagValue,anotherTag=withAnotherValue:1|c`)
 + Multi-Metric Packets
