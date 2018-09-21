@@ -9,3 +9,4 @@ newyu_statsdbeat.yml
 /vendor/*
 /logs/*
 /data/*
+/.vscode/*

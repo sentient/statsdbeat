@@ -6,8 +6,8 @@ package config
 import "time"
 
 type Config struct {
-	Period     time.Duration `config:"period"`        //The flush interval from statsd client, to elasticsearch
-	UDPAddress string        `confing:"statsdserver"` //udp listening
+	Period     time.Duration `config:"period"`       //The flush interval from statsd client, to elasticsearch
+	UDPAddress string        `config:"statsdserver"` //udp listening
 }
 
 var DefaultConfig = Config{

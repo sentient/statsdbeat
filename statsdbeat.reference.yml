@@ -5,6 +5,8 @@
 statsdbeat:
   # Defines how often an event is sent to the output
   period: 5s
+  # on what post we listen for Stats UDP messages
+  statsdserver: ":8125"  
 
 #================================ General ======================================
 
