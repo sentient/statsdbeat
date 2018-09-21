@@ -9,7 +9,7 @@ Ensure that this folder is at the following location:
 
 ### Requirements
 
-* [Golang](https://golang.org/dl/) 1.7
+* [Golang](https://golang.org/dl/) > 1.7
 
 ### Init Project
 To get running with Statsdbeat and also install the
@@ -76,10 +76,7 @@ echo "accounts.authentication.login.num_users:333|g" | nc -u -w0 127.0.0.1 8125
 
 alternatively:
 ```
-make unit-tests
-make system-tests
-make integration-tests
-make coverage-report
+go test ./... -v
 ```
 
 The test coverage is reported in the folder `./build/coverage/`
