@@ -43,7 +43,7 @@ make
 ### Run 
 
 ```
-./statsdbeat -c staging_statsdbeat.yml
+./statsdbeat -c statsdbeat.yml
 ```
 
 #### with Debugger
@@ -51,7 +51,7 @@ make
 Log output to console. Run Statsdbeat with debugging output enabled:
 
 ```
-./statsdbeat -c staging_statsdbeat.yml -e -d "statsdbeat"
+./statsdbeat -c statsdbeat.yml -e -d "statsdbeat"
 
 ```
 or everything in debug
