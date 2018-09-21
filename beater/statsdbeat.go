@@ -16,21 +16,17 @@ import (
 )
 
 type Statsdbeat struct {
-	done       chan struct{}
-	stopping   bool
-	stopped    bool
-	config     config.Config
-	client     beat.Client
-	address    *net.UDPAddr
-	pipeline   beat.Pipeline // Interface to publish event.
-	buffer     []beat.Event
-	mux        sync.Mutex
-	tmpStorage *tmpStorage
-	log        *logp.Logger
+	done     chan struct{}
+	stopping bool
+	stopped  bool
+	config   config.Config
+	client   beat.Client
+	address  *net.UDPAddr
+	pipeline beat.Pipeline // Interface to publish event.
+	buffer   []beat.Event
+	mux      sync.Mutex
+	log      *logp.Logger
 }
-
-//damn, why do I find out about the spool after my initial writing of the tmpStorage
-var useSpool bool = true
 
 // New Creates a statsdbeater
 func New(b *beat.Beat, cfg *common.Config) (beat.Beater, error) {
@@ -55,13 +51,6 @@ func New(b *beat.Beat, cfg *common.Config) (beat.Beater, error) {
 	bt.log.Infof("Statsd server listening for UDP packages at '%v'", c.UDPAddress)
 
 	bt.pipeline = b.Publisher
-
-	if !useSpool {
-		bt.tmpStorage, err = NewStorage(c.RetryStorageLocation, c.Period)
-		if err != nil {
-			return nil, fmt.Errorf("Failed to create tmp storage, %v", c.RetryStorageLocation)
-		}
-	}
 
 	return bt, nil
 }
@@ -97,27 +86,13 @@ func (bt *Statsdbeat) Run(b *beat.Beat) error {
 	bt.log.Info("statsdbeat is running! Hit CTRL-C to stop it.")
 	var err error
 
-	ce := ClientEventHandler{bt: bt}
-	ph := PipelineACKHandler{bt: bt}
-
 	bt.client, err = b.Publisher.ConnectWith(beat.ClientConfig{
 		PublishMode: beat.GuaranteedSend,
 		WaitClose:   10 * time.Second,
-		//ACKCount:     ph.ACKCount,
-		//ACKEvents:    ph.ACKEvents,
-		ACKLastEvent: ph.ACKLastEvent,
-		Events:       ce,
 	})
-
-	//defer bt.client.Close()
 
 	if err != nil {
 		return err
-	}
-
-	if !useSpool {
-		//See if there were pending disk changes that still have to be send out.
-		bt.tmpStorage.TrySync(bt.client)
 	}
 
 	//I was able to connect to ElasticSearch
@@ -155,11 +130,7 @@ func (bt *Statsdbeat) Run(b *beat.Beat) error {
 func (bt *Statsdbeat) sendStatsdBuffer() {
 	bt.mux.Lock()
 	if len(bt.buffer) > 0 {
-		if useSpool {
-			bt.client.PublishAll(bt.buffer)
-		} else {
-			bt.tmpStorage.SendBatch(bt.client, bt.buffer)
-		}
+		bt.client.PublishAll(bt.buffer)
 		bt.buffer = nil
 	}
 	bt.mux.Unlock()
@@ -168,60 +139,4 @@ func (bt *Statsdbeat) sendStatsdBuffer() {
 func (bt *Statsdbeat) Stop() {
 	bt.client.Close()
 	close(bt.done)
-}
-
-type ClientEventHandler struct {
-	bt *Statsdbeat
-}
-
-func (h ClientEventHandler) Closing() {
-	h.bt.log.Info("statsdbeat CLOSING. Sending last buffer")
-	h.bt.stopping = true
-	h.bt.sendStatsdBuffer()
-
-}
-
-func (h ClientEventHandler) Closed() {
-	h.bt.log.Info("statsdbeat CLOSED.")
-	if !useSpool {
-		h.bt.tmpStorage.Flush()
-	}
-
-}
-
-func (h ClientEventHandler) Published() {
-	h.bt.log.Debug("statsdbeat publishing. (it has not been confirmed yet)")
-}
-
-func (h ClientEventHandler) FilteredOut(ev beat.Event) {
-	h.bt.log.Infof("filtered out %v", ev.Private)
-
-}
-
-func (h ClientEventHandler) DroppedOnPublish(ev beat.Event) {
-	h.bt.log.Infof("dropped on publish %v", ev.Private)
-}
-
-type PipelineACKHandler struct {
-	bt *Statsdbeat
-}
-
-// func (h PipelineACKHandler) ACKCount(n int) {
-// 	h.bt.log.Infof("acknowledged %d", n)
-
-// }
-
-// func (h PipelineACKHandler) ACKEvents(privates []interface{}) {
-// 	for _, e := range privates {
-// 		h.bt.log.Infof("acknowledged %v", e)
-// 	}
-// }
-
-//ACKLastEvent reports the last ACKed event out of a batch of ACKed events only.
-func (h PipelineACKHandler) ACKLastEvent(private interface{}) {
-	h.bt.log.Debug("last event from batch: %v", private)
-	if !useSpool {
-		h.bt.tmpStorage.RemoveBatch(private.(string))
-	}
-
 }

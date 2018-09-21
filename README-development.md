@@ -40,14 +40,24 @@ make
 ```
 
 
-### Run
+### Run 
 
-To run Statsdbeat with debugging output enabled, run:
+```
+./statsdbeat -c staging_statsdbeat.yml
+```
 
+#### with Debugger
+
+Log output to console. Run Statsdbeat with debugging output enabled:
+
+```
+./statsdbeat -c staging_statsdbeat.yml -e -d "statsdbeat"
+
+```
+or everything in debug
 ```
 ./statsdbeat -c statsdbeat.yml -e -d "*"
 ```
-
 
 ### Test
 

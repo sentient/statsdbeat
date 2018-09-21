@@ -10,10 +10,6 @@ import (
 	"github.com/elastic/beats/libbeat/common"
 )
 
-//regex might be getting too complicated? ->  ^(?P<bucket>(.*))\:(?P<value>(.*))\|(?P<type>(\-?\w))(\|(?P<rate>(.*)))?$
-//var startd = regexp.MustCompile(`/^(:<ns>[^.]+)\.(:<grp>[^.]+)\.(:<tgt>[^.]+)(?:\.(:<act>[^.]+))?/`)
-//var bucket = regexp.MustCompile(`/^(:<ns>[^.]+)\.(:<grp>[^.]+)\.(:<tgt>[^.]+)(?:\.(:<act>[^.]+))?/`)
-
 /*ParseBeats takes a string constructs a  beat.Event.
   the msg has format <bucket>(,<k>=<v>)*:<value>|<type>|@<sample rate>
 */

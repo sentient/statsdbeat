@@ -6,13 +6,11 @@ package config
 import "time"
 
 type Config struct {
-	Period               time.Duration `config:"period"`        //The flush interval from statsd client, to elasticsearch
-	UDPAddress           string        `confing:"statsdserver"` //udp listening
-	RetryStorageLocation string        `config:"storage"`       //flush to disk if we cannot connect.
+	Period     time.Duration `config:"period"`        //The flush interval from statsd client, to elasticsearch
+	UDPAddress string        `confing:"statsdserver"` //udp listening
 }
 
 var DefaultConfig = Config{
-	Period:               5 * time.Second,
-	UDPAddress:           ":8125",
-	RetryStorageLocation: "./.storage/retry",
+	Period:     5 * time.Second,
+	UDPAddress: ":8125",
 }
