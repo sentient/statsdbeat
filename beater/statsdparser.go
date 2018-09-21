@@ -2,7 +2,6 @@ package beater
 
 import (
 	"fmt"
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -13,12 +12,11 @@ import (
 
 //regex might be getting too complicated? ->  ^(?P<bucket>(.*))\:(?P<value>(.*))\|(?P<type>(\-?\w))(\|(?P<rate>(.*)))?$
 //var startd = regexp.MustCompile(`/^(:<ns>[^.]+)\.(:<grp>[^.]+)\.(:<tgt>[^.]+)(?:\.(:<act>[^.]+))?/`)
-var bucket = regexp.MustCompile(`/^(:<ns>[^.]+)\.(:<grp>[^.]+)\.(:<tgt>[^.]+)(?:\.(:<act>[^.]+))?/`)
+//var bucket = regexp.MustCompile(`/^(:<ns>[^.]+)\.(:<grp>[^.]+)\.(:<tgt>[^.]+)(?:\.(:<act>[^.]+))?/`)
 
-/*ParseBeat takes a string constructs a  beat.Event.
+/*ParseBeats takes a string constructs a  beat.Event.
   the msg has format <bucket>(,<k>=<v>)*:<value>|<type>|@<sample rate>
 */
-
 func ParseBeats(msg string) ([]beat.Event, error) {
 	parts := strings.Split(msg, "\n")
 	result := []beat.Event{}
@@ -63,6 +61,9 @@ func parseBeat(msg string) ([]beat.Event, error) {
 	if len(ns) > 0 {
 		bucketMap.Put("statsd.namespace", ns)
 	}
+	if len(tags) > 0 {
+		bucketMap.Put("statsd.ctx", tags)
+	}
 
 	switch _type {
 	case "c":
@@ -72,14 +73,35 @@ func parseBeat(msg string) ([]beat.Event, error) {
 				"statsd.type":  "counter",
 			}
 		}
+	case "g":
+		{
+			e.Fields = common.MapStr{
+				"statsd.value": val,
+				"statsd.type":  "gauge",
+			}
+		}
+	case "h":
+		{
+			e.Fields = common.MapStr{
+				"statsd.value": val,
+				"statsd.type":  "histogram",
+			}
+		}
+	case "ms":
+		{
+			e.Fields = common.MapStr{
+				"statsd.value": val,
+				"statsd.type":  "timing",
+			}
+		}
+
 	default:
 		{
 			return nil, fmt.Errorf("Type %v not handled yet", _type)
 		}
 	}
-	e.Fields.Update(bucketMap)
 
-	e.Fields.Put("statsd.ctx", tags)
+	e.Fields.Update(bucketMap)
 
 	return []beat.Event{*e}, nil
 }

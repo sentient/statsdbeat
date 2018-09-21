@@ -89,29 +89,87 @@ func Test_parseBeat(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *beat.Event
+		want    []beat.Event
 		wantErr bool
 	}{
 		{"testSimple",
 			args{"myCounter:1|c"},
-			&beat.Event{
-				Fields: common.MapStr{
-					"val":     1,
-					"bucket":  "myCounter",
-					"context": map[string]interface{}{},
+			[]beat.Event{
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket": "myCounter",
+						"statsd.target": "myCounter",
+						"statsd.type":   "counter",
+						"statsd.value":  1,
+					},
 				},
 			},
 			false,
 		},
 		{"testWithTags",
 			args{"myCounter,myTag=error,tagB=2:1|c"},
-			&beat.Event{
-				Fields: common.MapStr{
-					"val":    1,
-					"bucket": "myCounter",
-					"context": map[string]interface{}{
-						"myTag": "error",
-						"tagB":  "2",
+			[]beat.Event{
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket": "myCounter",
+						"statsd.target": "myCounter",
+						"statsd.type":   "counter",
+						"statsd.value":  1,
+						"statsd.ctx": map[string]interface{}{
+							"myTag": "error",
+							"tagB":  "2",
+						},
+					},
+				},
+			},
+			false,
+		},
+		{"testGauge",
+			args{"platform-insights.test.gauge.num_goroutine:4|g"},
+			[]beat.Event{
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket":    "platform-insights.test.gauge.num_goroutine",
+						"statsd.namespace": "platform-insights",
+						"statsd.section":   "test",
+						"statsd.target":    "gauge",
+						"statsd.action":    "num_goroutine",
+						"statsd.type":      "gauge",
+						"statsd.value":     4,
+					},
+				},
+			},
+			false,
+		},
+		{"testHistogram",
+			args{"platform-insights.test.histogram.not_sure:17|h"},
+			[]beat.Event{
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket":    "platform-insights.test.histogram.not_sure",
+						"statsd.namespace": "platform-insights",
+						"statsd.section":   "test",
+						"statsd.target":    "histogram",
+						"statsd.action":    "not_sure",
+						"statsd.type":      "histogram",
+						"statsd.value":     17,
+					},
+				},
+			},
+			false,
+		},
+		{"testTiming",
+			args{"platform-insights.test.timing.ping:100|ms"},
+			[]beat.Event{
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket":    "platform-insights.test.timing.ping",
+						"statsd.namespace": "platform-insights",
+						"statsd.section":   "test",
+						"statsd.target":    "timing",
+						"statsd.action":    "ping",
+						"statsd.type":      "timing",
+						"statsd.value":     100,
 					},
 				},
 			},
@@ -120,22 +178,26 @@ func Test_parseBeat(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			beats, err := ParseBeat(tt.args.msg)
+			beats, err := ParseBeats(tt.args.msg)
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ParseBeat() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 
-			if len(beats) != 1 {
-				t.Errorf("Expected one beat, but was %d", len(beats))
+			if len(beats) != len(tt.want) {
+				t.Errorf("ParseBeat array length = %v, want %v", len(beats), len(tt.want))
+				return
 			}
-			got := beats[0]
-			//We want to skip the timestamp
 
-			if !reflect.DeepEqual(got.Fields, tt.want.Fields) {
-				t.Errorf("ParseBeat() = %v, want %v", got.Fields, tt.want.Fields)
+			//We want to skip the timestamp
+			for i := 0; i < len(beats); i++ {
+				//Got to flatten it!
+				if !reflect.DeepEqual(beats[i].Fields.Flatten(), tt.want[i].Fields.Flatten()) {
+					t.Errorf("ParseBeat() = \n%v, want \n%v", beats[i].Fields.Flatten(), tt.want[i].Fields.Flatten())
+				}
 			}
+
 		})
 	}
 }
@@ -237,6 +299,7 @@ func TestParseBeats(t *testing.T) {
 				t.Errorf("ParseBeat() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if len(beats) != len(tt.want) {
 				t.Errorf("ParseBeat array length = %v, want %v", len(beats), len(tt.want))
 				return
@@ -244,16 +307,13 @@ func TestParseBeats(t *testing.T) {
 
 			//We want to skip the timestamp
 			for i := 0; i < len(beats); i++ {
-				// if beats[i].Fields.Flatten().StringToPrint() != tt.want[i].Fields.Flatten().StringToPrint() {
-				// 	t.Errorf("ParseBeat failed\n%v,\n%v",
-				// 		beats[i].Fields.Flatten().StringToPrint(),
-				// 		tt.want[i].Fields.Flatten().StringToPrint())
-				// }
+
 				//Got to flatten it!
 				if !reflect.DeepEqual(beats[i].Fields.Flatten(), tt.want[i].Fields.Flatten()) {
-					t.Errorf("ParseBeat() = \n%v, want \n%v", beats[i].Fields, tt.want[i].Fields)
+					t.Errorf("ParseBeat() = \n%v, want \n%v", beats[i].Fields.Flatten(), tt.want[i].Fields.Flatten())
 				}
 			}
+
 		})
 	}
 }

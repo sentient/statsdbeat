@@ -4,7 +4,7 @@
 
 statsdbeat:
   # Defines how often an event is sent to the output
-  period: 10s
+  period: 5s
   statsdserver: ":8125"  
 
 #================================ General =====================================
@@ -167,6 +167,7 @@ output.elasticsearch:
 
   # Optional protocol and basic auth credentials.
   #protocol: "https"
+
   #username: "elastic"
   #password: "changeme"
 

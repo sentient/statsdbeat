@@ -75,7 +75,7 @@ func (bt *Statsdbeat) listenAndBuffer(conn *net.UDPConn) {
 		}
 		statsdMsg := string(buf[0:n])
 		if len(statsdMsg) > 0 {
-			bt.log.Info(fmt.Sprintf("Received %v from %v", statsdMsg, addr))
+			bt.log.Debug(fmt.Sprintf("Received %v from %v", statsdMsg, addr))
 
 			events, err := ParseBeats(statsdMsg)
 			if err != nil {
@@ -175,7 +175,7 @@ type ClientEventHandler struct {
 }
 
 func (h ClientEventHandler) Closing() {
-	h.bt.log.Info("statsdbeat CLOSING.")
+	h.bt.log.Info("statsdbeat CLOSING. Sending last buffer")
 	h.bt.stopping = true
 	h.bt.sendStatsdBuffer()
 
@@ -219,7 +219,7 @@ type PipelineACKHandler struct {
 
 //ACKLastEvent reports the last ACKed event out of a batch of ACKed events only.
 func (h PipelineACKHandler) ACKLastEvent(private interface{}) {
-	h.bt.log.Infof("last event from batch: %v", private)
+	h.bt.log.Debug("last event from batch: %v", private)
 	if !useSpool {
 		h.bt.tmpStorage.RemoveBatch(private.(string))
 	}
