@@ -77,7 +77,7 @@ func (bt *Statsdbeat) listenAndBuffer(conn *net.UDPConn) {
 		if len(statsdMsg) > 0 {
 			bt.log.Info(fmt.Sprintf("Received %v from %v", statsdMsg, addr))
 
-			events, err := ParseBeat(statsdMsg)
+			events, err := ParseBeats(statsdMsg)
 			if err != nil {
 				bt.log.Error("Failed making a beat", zap.Error(err))
 			} else {

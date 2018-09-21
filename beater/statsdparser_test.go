@@ -82,7 +82,7 @@ func Test_getBucketTagsValue(t *testing.T) {
 	}
 }
 
-func TestParseBeat(t *testing.T) {
+func Test_parseBeat(t *testing.T) {
 	type args struct {
 		msg string
 	}
@@ -135,6 +135,124 @@ func TestParseBeat(t *testing.T) {
 
 			if !reflect.DeepEqual(got.Fields, tt.want.Fields) {
 				t.Errorf("ParseBeat() = %v, want %v", got.Fields, tt.want.Fields)
+			}
+		})
+	}
+}
+
+func TestParseBeats(t *testing.T) {
+	type args struct {
+		msg string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    []beat.Event
+		wantErr bool
+	}{
+		{"testSimple",
+			args{"myCounter:1|c"},
+			[]beat.Event{
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket": "myCounter",
+						"statsd.target": "myCounter",
+						"statsd.type":   "counter",
+						"statsd.value":  1,
+						"statsd": map[string]interface{}{
+							"ctx": map[string]interface{}{},
+						},
+					},
+				},
+			},
+			false,
+		},
+		{"testMultiline",
+			args{"myCounter:1|c\ncnt2:2|c\ncnt3:3|c\ncnt4:4|c\ncnt5:5|c"},
+			[]beat.Event{
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket": "myCounter",
+						"statsd.target": "myCounter",
+						"statsd.type":   "counter",
+						"statsd.value":  1,
+						"statsd": map[string]interface{}{
+							"ctx": map[string]interface{}{},
+						},
+					},
+				},
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket": "cnt2",
+						"statsd.target": "cnt2",
+						"statsd.type":   "counter",
+						"statsd.value":  2,
+						"statsd": map[string]interface{}{
+							"ctx": map[string]interface{}{},
+						},
+					},
+				},
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket": "cnt3",
+						"statsd.target": "cnt3",
+						"statsd.type":   "counter",
+						"statsd.value":  3,
+						"statsd": map[string]interface{}{
+							"ctx": map[string]interface{}{},
+						},
+					},
+				},
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket": "cnt4",
+						"statsd.target": "cnt4",
+						"statsd.type":   "counter",
+						"statsd.value":  4,
+						"statsd": map[string]interface{}{
+							"ctx": map[string]interface{}{},
+						},
+					},
+				},
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket": "cnt5",
+						"statsd.target": "cnt5",
+						"statsd.type":   "counter",
+						"statsd.value":  5,
+						"statsd": map[string]interface{}{
+							"ctx": map[string]interface{}{},
+						},
+					},
+				},
+			},
+			false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			beats, err := ParseBeats(tt.args.msg)
+
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ParseBeat() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if len(beats) != len(tt.want) {
+				t.Errorf("ParseBeat array length = %v, want %v", len(beats), len(tt.want))
+				return
+			}
+
+			//We want to skip the timestamp
+			for i := 0; i < len(beats); i++ {
+				// if beats[i].Fields.Flatten().StringToPrint() != tt.want[i].Fields.Flatten().StringToPrint() {
+				// 	t.Errorf("ParseBeat failed\n%v,\n%v",
+				// 		beats[i].Fields.Flatten().StringToPrint(),
+				// 		tt.want[i].Fields.Flatten().StringToPrint())
+				// }
+				//Got to flatten it!
+				if !reflect.DeepEqual(beats[i].Fields.Flatten(), tt.want[i].Fields.Flatten()) {
+					t.Errorf("ParseBeat() = \n%v, want \n%v", beats[i].Fields, tt.want[i].Fields)
+				}
 			}
 		})
 	}

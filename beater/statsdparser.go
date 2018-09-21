@@ -18,7 +18,21 @@ var bucket = regexp.MustCompile(`/^(:<ns>[^.]+)\.(:<grp>[^.]+)\.(:<tgt>[^.]+)(?:
 /*ParseBeat takes a string constructs a  beat.Event.
   the msg has format <bucket>(,<k>=<v>)*:<value>|<type>|@<sample rate>
 */
-func ParseBeat(msg string) ([]beat.Event, error) {
+
+func ParseBeats(msg string) ([]beat.Event, error) {
+	parts := strings.Split(msg, "\n")
+	result := []beat.Event{}
+	for p := range parts {
+		b, err := parseBeat(parts[p])
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, b...)
+	}
+	return result, nil
+}
+
+func parseBeat(msg string) ([]beat.Event, error) {
 	parts := strings.Split(msg, "|")
 	if len(parts) < 2 || len(parts) > 3 {
 		return nil, fmt.Errorf("Expecting 2 or 3 parts of | but was %d", len(parts))
