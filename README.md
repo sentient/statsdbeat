@@ -1,12 +1,7 @@
 Statsdbeat
 ==========
 
-Using the beat framework to send application statistics to ElasticSearch. The beat framework is a golang implementation. 
-
-References:
-+ [Etsy Statsd metric types](https://github.com/etsy/statsd/blob/master/docs/metric_types.md)
-  - [Elastic Search backend](https://github.com/markkimsal/statsd-elasticsearch-backend), 
-       (NPM module for Etsty Statsd to output to ElasticSearch )
+Using the [beat framework](https://www.elastic.co/products/beats) to send [statsd formatted](https://github.com/b/statsd_spec) messages to ElasticSearch. 
 
 
 # What we do 
@@ -23,7 +18,7 @@ Support
     | Histogram     | `platform-insights.test.histogram.my_histo:17|h`  |
     | Timing        | `platform-insights.test.timing.ping:10|ms`        |
 
-+ Tags (InfluxDB notation  `counter,tagName=tagValue,anotherTag=withAnotherValue:1|c`)
++ Tags (in InfluxDB notation format `counter,tagName=tagValue,anotherTag=withAnotherValue:1|c`)
 + Multi-Metric Packets
 
 
@@ -32,7 +27,7 @@ Support
 ```
 statsdbeat:
   statsdserver: ":8125"    # where should we listen for the UDP messages. Typically your localhost on port 8125
-  period: 5s               # how often are the events send to the output  
+  period: 5s               # interval period the events (if any) are send to the output  
 ```
 
 ## Spooling
@@ -54,15 +49,26 @@ queue:
 
 # What we don't do (yet)
 
-+ Sets
++ No pre-aggreation (roll-ups) of data before sending to Elastic Search
 
-+ Sampling
++ No Sets
+
++ No Sampling
   
-+ Resend gauge information ()
++ No resend Gauge information ()
 
-+ We don't compute percentile aggregations. Elastic Search has this already [build in]  (https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-percentile-aggregation.html)
++ We don't compute percentile aggregations. Elastic Search has this already [build in](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-percentile-aggregation.html)
 
  
 # Development
 
 * [Getting Started](README-development.md)
+
+
+
+# References:
+
+
++ [Etsy Statsd metric types](https://github.com/etsy/statsd/blob/master/docs/metric_types.md)
+  - [Elastic Search backend](https://github.com/markkimsal/statsd-elasticsearch-backend), 
+       (NPM module for Etsty Statsd to output to ElasticSearch )
