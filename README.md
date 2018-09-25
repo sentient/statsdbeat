@@ -3,6 +3,9 @@ Statsdbeat
 
 Using the [beat framework](https://www.elastic.co/products/beats) to send [statsd formatted](https://github.com/b/statsd_spec) messages to ElasticSearch. 
 
+# Download
+
+[1.0 release](https://github.com/sentient/statsdbeat/releases)
 
 # What we do 
 

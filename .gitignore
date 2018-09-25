@@ -10,3 +10,4 @@ newyu_statsdbeat.yml
 /logs/*
 /data/*
 /.vscode/*
+make_package.sh

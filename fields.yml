@@ -260,43 +260,9 @@
 
         - name: ctx
           type: object
-          object_type: keyword
-          # doc_values: false #test
-          #ignore_above: 1024 #this does not do anything.
+          object_type: keyword          
           object_type_mapping_type: "*"
           dynamic: true          
           description: >
             Contains user tags
                  
-
-    # This will stop loading the template (but you won't see any exceptions)
-    # - name: dynamic_templates
-    #   type: group
-    #   fields:
-    #     - name: "strings"
-    #       type: group
-    #       fields:
-    #         - name: "match_mapping_type"
-    #           type: "string"
-    #         - name: "mapping"
-    #           type: group
-    #           fields: 
-    #             - name: "type"
-    #               type: "keyword"                
-
- # 
-# - name: dynamic_templates
-#       type: group
-#       fields:
-#         - name: "strings"
-#           type: group
-#           fields:
-#             - name: "match_mapping_type"
-#               type: "string"
-#             - name: "mapping"
-#               type: group
-#               fields: 
-#                 - name: "type"
-#                   type: "keyword"
-#                 - name: "ignore_above"
-#                   type: 1024
