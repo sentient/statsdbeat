@@ -69,10 +69,13 @@ make testsuite
 
 Send testdata with 
 ```
-echo "accounts.authentication.password.failed:1|c" | nc -u -w0 127.0.0.1 8125
-echo "accounts.authentication.login.time:320|ms" | nc -u -w0 127.0.0.1 8125
-echo "accounts.authentication.login.num_users:333|g" | nc -u -w0 127.0.0.1 8125
+echo -n "accounts.authentication.password.failed:1|c" | nc -u -w0 127.0.0.1 8125
+echo -n "accounts.authentication.login.time:320|ms" | nc -u -w0 127.0.0.1 8125
+echo -n "accounts.authentication.login.num_users:333|g" | nc -u -w0 127.0.0.1 8125
+
+echo -en "n.s.t.cnt1:1|c\n.s.t.nct2:2|c" | nc -u -w0 127.0.0.1 8125
 ```
+
 
 alternatively:
 ```
