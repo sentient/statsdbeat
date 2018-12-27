@@ -3,6 +3,7 @@ package beater
 import (
 	"fmt"
 	"net"
+	"strconv"
 	"sync"
 	"time"
 
@@ -121,15 +122,15 @@ func (bt *Statsdbeat) Run(b *beat.Beat) error {
 			}
 			return nil
 		case <-ticker.C:
+			bt.sendStatsdBuffer()
 		}
-
-		bt.sendStatsdBuffer()
 	}
 }
 
 func (bt *Statsdbeat) sendStatsdBuffer() {
 	bt.mux.Lock()
 	if len(bt.buffer) > 0 {
+		bt.log.Info("Sending buffer " + strconv.Itoa(len(bt.buffer)))
 		bt.client.PublishAll(bt.buffer)
 		bt.buffer = nil
 	}
