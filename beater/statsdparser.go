@@ -1,6 +1,7 @@
 package beater
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -116,7 +117,14 @@ func getBucketTagsValue(part string) (bucket string, tags map[string]interface{}
 		}
 	}
 
-	val, err = strconv.Atoi(parts[1])
+	var fval float64
+	if fval, err = strconv.ParseFloat(parts[1], 64); err == nil {
+		if fval == float64(int(fval)) {
+			val = int(fval)
+		} else {
+			return bucket, tags, 0, errors.New("failed to parse the value to an int " + parts[1])
+		}
+	}
 
 	return bucket, tags, val, err
 }
