@@ -345,6 +345,131 @@ func TestParseBeats(t *testing.T) {
 			},
 			false,
 		},
+		{"testVault",
+			args{"\nvault.test-phoenix-platform.runtime.num_goroutines:20.000000|g" +
+				"\nvault.test-phoenix-platform.runtime.alloc_bytes:4523224.000000|g" +
+				"\nvault.test-phoenix-platform.runtime.sys_bytes:72022264.000000|g" +
+				"\nvault.test-phoenix-platform.runtime.malloc_count:96671.000000|g" +
+				"\nvault.test-phoenix-platform.runtime.free_count:77885.000000|g" +
+				"\nvault.test-phoenix-platform.runtime.heap_objects:18786.000000|g" +
+				"\nvault.test-phoenix-platform.runtime.total_gc_pause_ns:3770211.000000|g" +
+				"\nvault.test-phoenix-platform.runtime.total_gc_runs:5.000000|g"},
+			[]beat.Event{
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket":    "vault.test-phoenix-platform.runtime.num_goroutines",
+						"statsd.namespace": "vault",
+						"statsd.section":   "test-phoenix-platform",
+						"statsd.target":    "runtime",
+						"statsd.action":    "num_goroutines",
+						"statsd.type":      "gauge",
+						"statsd.value":     20,
+						"statsd": map[string]interface{}{
+							"ctx": map[string]interface{}{},
+						},
+					},
+				},
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket":    "vault.test-phoenix-platform.runtime.alloc_bytes",
+						"statsd.namespace": "vault",
+						"statsd.section":   "test-phoenix-platform",
+						"statsd.target":    "runtime",
+						"statsd.action":    "alloc_bytes",
+						"statsd.type":      "gauge",
+						"statsd.value":     4523224,
+						"statsd": map[string]interface{}{
+							"ctx": map[string]interface{}{},
+						},
+					},
+				},
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket":    "vault.test-phoenix-platform.runtime.sys_bytes",
+						"statsd.namespace": "vault",
+						"statsd.section":   "test-phoenix-platform",
+						"statsd.target":    "runtime",
+						"statsd.action":    "sys_bytes",
+						"statsd.type":      "gauge",
+						"statsd.value":     72022264,
+						"statsd": map[string]interface{}{
+							"ctx": map[string]interface{}{},
+						},
+					},
+				},
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket":    "vault.test-phoenix-platform.runtime.malloc_count",
+						"statsd.namespace": "vault",
+						"statsd.section":   "test-phoenix-platform",
+						"statsd.target":    "runtime",
+						"statsd.action":    "malloc_count",
+						"statsd.type":      "gauge",
+						"statsd.value":     96671,
+						"statsd": map[string]interface{}{
+							"ctx": map[string]interface{}{},
+						},
+					},
+				},
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket":    "vault.test-phoenix-platform.runtime.free_count",
+						"statsd.namespace": "vault",
+						"statsd.section":   "test-phoenix-platform",
+						"statsd.target":    "runtime",
+						"statsd.action":    "free_count",
+						"statsd.type":      "gauge",
+						"statsd.value":     77885,
+						"statsd": map[string]interface{}{
+							"ctx": map[string]interface{}{},
+						},
+					},
+				},
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket":    "vault.test-phoenix-platform.runtime.heap_objects",
+						"statsd.namespace": "vault",
+						"statsd.section":   "test-phoenix-platform",
+						"statsd.target":    "runtime",
+						"statsd.action":    "heap_objects",
+						"statsd.type":      "gauge",
+						"statsd.value":     18786,
+						"statsd": map[string]interface{}{
+							"ctx": map[string]interface{}{},
+						},
+					},
+				},
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket":    "vault.test-phoenix-platform.runtime.total_gc_pause_ns",
+						"statsd.namespace": "vault",
+						"statsd.section":   "test-phoenix-platform",
+						"statsd.target":    "runtime",
+						"statsd.action":    "total_gc_pause_ns",
+						"statsd.type":      "gauge",
+						"statsd.value":     3770211,
+						"statsd": map[string]interface{}{
+							"ctx": map[string]interface{}{},
+						},
+					},
+				},
+				beat.Event{
+					Fields: common.MapStr{
+						"statsd.bucket":    "vault.test-phoenix-platform.runtime.total_gc_runs",
+						"statsd.namespace": "vault",
+						"statsd.section":   "test-phoenix-platform",
+						"statsd.target":    "runtime",
+						"statsd.action":    "total_gc_runs",
+						"statsd.type":      "gauge",
+						"statsd.value":     5,
+						"statsd": map[string]interface{}{
+							"ctx": map[string]interface{}{},
+						},
+					},
+				},
+			},
+			false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

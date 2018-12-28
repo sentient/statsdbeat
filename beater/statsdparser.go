@@ -18,6 +18,10 @@ func ParseBeats(msg string) ([]beat.Event, error) {
 	parts := strings.Split(msg, "\n")
 	result := []beat.Event{}
 	for p := range parts {
+		if len(strings.TrimSpace(parts[p])) == 0 {
+			//skip empty lines
+			continue
+		}
 		b, err := parseBeat(parts[p])
 		if err != nil {
 			return nil, err
