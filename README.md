@@ -1,116 +1,77 @@
-# Statsdbeat
+Statsdbeat
+==========
 
-Welcome to Statsdbeat.
+Using the [beat framework](https://www.elastic.co/products/beats) to send [statsd formatted](https://github.com/b/statsd_spec) messages to ElasticSearch. 
 
-Ensure that this folder is at the following location:
-`${GOPATH}/src/github.com/sentient/statsdbeat`
+# Download
 
-## Getting Started with Statsdbeat
+[1.0 release](https://github.com/sentient/statsdbeat/releases)
 
-### Requirements
+# What we do 
 
-* [Golang](https://golang.org/dl/) 1.7
+We listen for UDP pacakges. And forwards them as `beat.Event` into Elastic Search at the index `statsdbeat-<beat-version>-<yyyy-mm-dd>`
 
-### Init Project
-To get running with Statsdbeat and also install the
-dependencies, run the following command:
+Support
++ Following statsd types are supported
+  
+    | Type          | Example                                           |
+    | ------------- | --------------------------------------------------|
+    | Counters      | `platform-insights.test.counter.tick:1|c`         |
+    | Gauge         | `platform-insights.test.gauge.num_goroutine:1|g`  |
+    | Histogram     | `platform-insights.test.histogram.my_histo:17|h`  |
+    | Timing        | `platform-insights.test.timing.ping:10|ms`        |
 
-```
-make setup
-```
++ Tags (in InfluxDB notation format `counter,tagName=tagValue,anotherTag=withAnotherValue:1|c`)
++ Multi-Metric Packets
 
-It will create a clean git history for each major step. Note that you can always rewrite the history if you wish before pushing your changes.
 
-To push Statsdbeat in the git repository, run the following commands:
-
-```
-git remote set-url origin https://github.com/sentient/statsdbeat
-git push origin master
-```
-
-For further development, check out the [beat developer guide](https://www.elastic.co/guide/en/beats/libbeat/current/new-beat.html).
-
-### Build
-
-To build the binary for Statsdbeat run the command below. This will generate a binary
-in the same directory with the name statsdbeat.
+# Configuration
 
 ```
-make
+statsdbeat:
+  statsdserver: ":8125"    # where should we listen for the UDP messages. Typically your localhost on port 8125
+  period: 5s               # interval period the events (if any) are send to the output  
 ```
 
+## Spooling
 
-### Run
+_Spooling to disk is currently a beta feature. Use with care._
 
-To run Statsdbeat with debugging output enabled, run:
-
-```
-./statsdbeat -c statsdbeat.yml -e -d "*"
-```
-
-
-### Test
-
-To test Statsdbeat, run the following command:
+You can configure in `statsbeat.yml` the spooling to disk
 
 ```
-make testsuite
-```
+output.elasticsearch:
+  hosts: ["https://vpc-<your-name>.<aws-region>.es.amazonaws.com:443"]
 
-alternatively:
-```
-make unit-tests
-make system-tests
-make integration-tests
-make coverage-report
-```
-
-The test coverage is reported in the folder `./build/coverage/`
-
-### Update
-
-Each beat has a template for the mapping in elasticsearch and a documentation for the fields
-which is automatically generated based on `fields.yml` by running the following command.
+queue:
+  spool:
+    file:
+      flush.timeout:1s 
 
 ```
-make update
-```
+
+# What we don't do (yet)
+
++ No pre-aggreation (roll-ups) of data before sending to Elastic Search
+
++ No Sets
+
++ No Sampling
+  
++ No resend Gauge information ()
+
++ We don't compute percentile aggregations. Elastic Search has this already [build in](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-percentile-aggregation.html)
+
+ 
+# Development
+
+* [Getting Started](README-development.md)
 
 
-### Cleanup
 
-To clean  Statsdbeat source code, run the following command:
-
-```
-make fmt
-```
-
-To clean up the build directory and generated artifacts, run:
-
-```
-make clean
-```
+# References:
 
 
-### Clone
-
-To clone Statsdbeat from the git repository, run the following commands:
-
-```
-mkdir -p ${GOPATH}/src/github.com/sentient/statsdbeat
-git clone https://github.com/sentient/statsdbeat ${GOPATH}/src/github.com/sentient/statsdbeat
-```
-
-
-For further development, check out the [beat developer guide](https://www.elastic.co/guide/en/beats/libbeat/current/new-beat.html).
-
-
-## Packaging
-
-The beat frameworks provides tools to crosscompile and package your beat for different platforms. This requires [docker](https://www.docker.com/) and vendoring as described above. To build packages of your beat, run the following command:
-
-```
-make release
-```
-
-This will fetch and create all images required for the build process. The whole process to finish can take several minutes.
++ [Etsy Statsd metric types](https://github.com/etsy/statsd/blob/master/docs/metric_types.md)
+  - [Elastic Search backend](https://github.com/markkimsal/statsd-elasticsearch-backend), 
+       (NPM module for Etsty Statsd to output to ElasticSearch )
