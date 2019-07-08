@@ -1,0 +1,5 @@
+= Statsdbeat Docs
+
+Welcome to the Statsdbeat documentation.
+
+
