@@ -7,6 +7,14 @@ ES_BEATS?=./vendor/github.com/elastic/beats
 LIBBEAT_MAKEFILE=$(ES_BEATS)/libbeat/scripts/Makefile
 GOPACKAGES=$(shell govendor list -no-status +local)
 GOBUILD_FLAGS=-i -ldflags "-X $(BEAT_PATH)/vendor/github.com/elastic/beats/libbeat/version.buildTime=$(NOW) -X $(BEAT_PATH)/vendor/github.com/elastic/beats/libbeat/version.commit=$(COMMIT_ID)"
+
+GOX_OS?=!darwin !windows ## @Building List of all OS to be supported by "make crosscompile".
+#GOX_ARCH?=amd64
+GOX_OSARCH?=linux/amd64 ## @building Space separated list of GOOS/GOARCH pairs to build by "make crosscompile".
+#GOX_FLAGS?=-parallel=2 -tags=7.1.1 -arch=amd64 ## @building Additional flags to append to the gox command used by "make crosscompile".
+GOX_FLAGS?=-parallel=2 -tags=7.1.2 # -arch=amd64 ## @building Additional flags to append to the gox command used by "make crosscompile".
+# PACKAGES?=${BEAT_NAME}/deb ${BEAT_NAME}/rpm 
+
 MAGE_IMPORT_PATH=${BEAT_PATH}/vendor/github.com/magefile/mage
 NO_COLLECT=true
 

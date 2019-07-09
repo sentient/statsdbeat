@@ -137,3 +137,27 @@ make package
 ```
 
 This will fetch and create all images required for the build process. The whole process to finish can take several minutes.
+
+
+
+New for the 7.1. release
+
+```
+mage help
+```
+
+```
+Targets:
+  build                 builds the Beat binary.
+  buildGoDaemon         builds the go-daemon binary (use crossBuildGoDaemon).
+  clean                 cleans all generated files and build artifacts.
+  crossBuild            cross-builds the beat for all target platforms.
+  crossBuildGoDaemon    cross-builds the go-daemon binary using Docker.
+  fields                generates a fields.yml for the Beat.
+  goTestIntegration     executes the Go integration tests.
+  goTestUnit            executes the Go unit tests.
+  golangCrossBuild      build the Beat binary inside of the golang-builder.
+  package               packages the Beat for distribution.
+  testPackages          tests the generated packages (i.e.
+  update                updates the generated files (aka make update).
+```
