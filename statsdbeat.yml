@@ -3,7 +3,7 @@
 ############################# Statsdbeat ######################################
 
 statsdbeat:
-  # Defines how often an event is sent to the output
+  # the time interval for the collected events being send to the output
   period: 5s
   # the server:port to listen for Stats UDP messages
   statsdserver: ":8125"  
