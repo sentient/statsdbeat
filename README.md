@@ -9,7 +9,7 @@ Using the [beat framework](https://www.elastic.co/products/beats) to send [stats
 
 # What we do 
 
-We listen for UDP pacakges. And forwards them as `beat.Event` into Elastic Search at the index `statsdbeat-<beat-version>-<yyyy-mm-dd>`
+We listen for UDP pacakges. And forwards them as `beat.Event` into Elastic Search at the index `statsdbeat-<agent-version>-<yyyy-mm-dd>`
 
 Support
 + Following statsd types are supported
