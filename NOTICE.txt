@@ -1,5 +1,5 @@
 statsdbeat
-Copyright {year} Marco Ensing
+Copyright 2022 Marco Ensing
 
 This product includes software developed by The Apache Software
 Foundation (http://www.apache.org/).

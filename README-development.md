@@ -161,3 +161,47 @@ Targets:
   testPackages          tests the generated packages (i.e.
   update                updates the generated files (aka make update).
 ```
+
+
+```
+./statsdbeat test output
+elasticsearch: http://localhost:9200...
+  parse url... OK
+  connection...
+    parse host... OK
+    dns lookup... OK
+    addresses: ::1, 127.0.0.1
+    dial up... OK
+  TLS... WARN secure connection disabled
+  talk to server... OK
+  version: 7.14.2
+  ```
+
+
+  ./statsdbeat setup template
+ILM policy and write alias loading not enabled.
+
+Index setup finished.
+
+
+
+
+---
+
+mage
+Targets:
+  build               builds the Beat binary.
+  buildGoDaemon       builds the go-daemon binary (use crossBuildGoDaemon).
+  check               formats code, updates generated content, check for common errors, and checks for any modified files.
+  clean               cleans all generated files and build artifacts.
+  config              generates both the short/reference/docker configs.
+  crossBuild          cross-builds the beat for all target platforms.
+  fields              generates a fields.yml for the Beat.
+  fmt                 formats source code (.go and .py) and adds license headers.
+  golangCrossBuild    build the Beat binary inside of the golang-builder.
+  package             packages the Beat for distribution.
+  test                runs all available tests
+  update              updates the generated files (aka make update).
+  
+
+mage check

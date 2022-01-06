@@ -4,8 +4,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/elastic/beats/libbeat/beat"
-	"github.com/elastic/beats/libbeat/common"
+	"github.com/elastic/beats/v7/libbeat/beat"
+	"github.com/elastic/beats/v7/libbeat/common"
 )
 
 func Test_getBucketTagsValue(t *testing.T) {
@@ -113,7 +113,7 @@ func Test_parseBeat(t *testing.T) {
 		{"testSimple",
 			args{"myCounter:1|c"},
 			[]beat.Event{
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket": "myCounter",
 						"statsd.target": "myCounter",
@@ -127,7 +127,7 @@ func Test_parseBeat(t *testing.T) {
 		{"testWithTags",
 			args{"myCounter,myTag=error,tagB=2:1|c"},
 			[]beat.Event{
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket": "myCounter",
 						"statsd.target": "myCounter",
@@ -145,7 +145,7 @@ func Test_parseBeat(t *testing.T) {
 		{"testGauge",
 			args{"platform-insights.test.gauge.num_goroutine:4|g"},
 			[]beat.Event{
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket":    "platform-insights.test.gauge.num_goroutine",
 						"statsd.namespace": "platform-insights",
@@ -162,7 +162,7 @@ func Test_parseBeat(t *testing.T) {
 		{"testHistogram",
 			args{"platform-insights.test.histogram.not_sure:17|h"},
 			[]beat.Event{
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket":    "platform-insights.test.histogram.not_sure",
 						"statsd.namespace": "platform-insights",
@@ -179,7 +179,7 @@ func Test_parseBeat(t *testing.T) {
 		{"testTiming",
 			args{"platform-insights.test.timing.ping:100|ms"},
 			[]beat.Event{
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket":    "platform-insights.test.timing.ping",
 						"statsd.namespace": "platform-insights",
@@ -253,7 +253,7 @@ func TestParseBeats(t *testing.T) {
 		{"testSimple",
 			args{"myCounter:1|c"},
 			[]beat.Event{
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket": "myCounter",
 						"statsd.target": "myCounter",
@@ -270,7 +270,7 @@ func TestParseBeats(t *testing.T) {
 		{"testMultiline",
 			args{"myCounter:1|c\ncnt2:2|c\ncnt3:3|c\ncnt4:4|c\ncnt5:5|c"},
 			[]beat.Event{
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket": "myCounter",
 						"statsd.target": "myCounter",
@@ -281,7 +281,7 @@ func TestParseBeats(t *testing.T) {
 						},
 					},
 				},
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket": "cnt2",
 						"statsd.target": "cnt2",
@@ -292,7 +292,7 @@ func TestParseBeats(t *testing.T) {
 						},
 					},
 				},
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket": "cnt3",
 						"statsd.target": "cnt3",
@@ -303,7 +303,7 @@ func TestParseBeats(t *testing.T) {
 						},
 					},
 				},
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket": "cnt4",
 						"statsd.target": "cnt4",
@@ -314,7 +314,7 @@ func TestParseBeats(t *testing.T) {
 						},
 					},
 				},
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket": "cnt5",
 						"statsd.target": "cnt5",
@@ -331,7 +331,7 @@ func TestParseBeats(t *testing.T) {
 		{"testFloat",
 			args{"myCounterAsFloat:1.0|c"},
 			[]beat.Event{
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket": "myCounterAsFloat",
 						"statsd.target": "myCounterAsFloat",
@@ -355,7 +355,7 @@ func TestParseBeats(t *testing.T) {
 				"\nvault.test-phoenix-platform.runtime.total_gc_pause_ns:3770211.000000|g" +
 				"\nvault.test-phoenix-platform.runtime.total_gc_runs:5.000000|g"},
 			[]beat.Event{
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket":    "vault.test-phoenix-platform.runtime.num_goroutines",
 						"statsd.namespace": "vault",
@@ -369,7 +369,7 @@ func TestParseBeats(t *testing.T) {
 						},
 					},
 				},
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket":    "vault.test-phoenix-platform.runtime.alloc_bytes",
 						"statsd.namespace": "vault",
@@ -383,7 +383,7 @@ func TestParseBeats(t *testing.T) {
 						},
 					},
 				},
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket":    "vault.test-phoenix-platform.runtime.sys_bytes",
 						"statsd.namespace": "vault",
@@ -397,7 +397,7 @@ func TestParseBeats(t *testing.T) {
 						},
 					},
 				},
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket":    "vault.test-phoenix-platform.runtime.malloc_count",
 						"statsd.namespace": "vault",
@@ -411,7 +411,7 @@ func TestParseBeats(t *testing.T) {
 						},
 					},
 				},
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket":    "vault.test-phoenix-platform.runtime.free_count",
 						"statsd.namespace": "vault",
@@ -425,7 +425,7 @@ func TestParseBeats(t *testing.T) {
 						},
 					},
 				},
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket":    "vault.test-phoenix-platform.runtime.heap_objects",
 						"statsd.namespace": "vault",
@@ -439,7 +439,7 @@ func TestParseBeats(t *testing.T) {
 						},
 					},
 				},
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket":    "vault.test-phoenix-platform.runtime.total_gc_pause_ns",
 						"statsd.namespace": "vault",
@@ -453,7 +453,7 @@ func TestParseBeats(t *testing.T) {
 						},
 					},
 				},
-				beat.Event{
+				{
 					Fields: common.MapStr{
 						"statsd.bucket":    "vault.test-phoenix-platform.runtime.total_gc_runs",
 						"statsd.namespace": "vault",

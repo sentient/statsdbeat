@@ -9906,18 +9906,99 @@ alias to: process.executable
 [[exported-fields-statsdbeat]]
 == statsdbeat fields
 
-None
+Statsdbeat module listens for UDP messages (default localhost:8125) that follows the statsd protocol.  The messages are converted to beat.Events and on configurable interval send to Elastic cluster.
 
 
-*`counter`*::
+
+
+*`statsd.bucket`*::
 +
 --
-PLEASE UPDATE DOCUMENTATION
+statsd bucket
+
+
+type: text
+
+example: accounts.authentication.password.failure.no_email_found
+
+--
+
+*`statsd.namespace`*::
++
+--
+statsd bucket namespace
+
+
+type: text
+
+example: accounts.authentication
+
+--
+
+*`statsd.section`*::
++
+--
+statsd bucket section
+
+
+type: keyword
+
+example: password
+
+--
+
+*`statsd.target`*::
++
+--
+statsd bucket target (noun)
+
+
+type: keyword
+
+example: failure
+
+--
+
+*`statsd.action`*::
++
+--
+statsd bucket action (past tense)
+
+
+type: keyword
+
+example: no_email_found
+
+--
+
+*`statsd.val`*::
++
+--
+value for the bucket
 
 
 type: long
 
-required: True
+--
+
+*`statsd.type`*::
++
+--
+The type of statsd counter  gauge  histogram.
+
+
+type: keyword
+
+--
+
+*`statsd.ctx`*::
++
+--
+Contains user tags
+     
+
+
+type: object
 
 --
 

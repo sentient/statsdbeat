@@ -21,7 +21,6 @@ replace (
 )
 
 require (
-	github.com/elastic/beats v7.6.2+incompatible
 	github.com/elastic/beats/v7 v7.14.3-0.20211221010839-0e30719802c5
 	github.com/magefile/mage v1.11.0
 	github.com/mitchellh/gox v1.0.1
