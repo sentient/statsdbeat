@@ -7058,10 +7058,10 @@
   fields:
     - name: statsd
       type: group
-      fields:        
+      fields:
         - name: bucket
           type: text
-          norms: false          
+          norms: false
           example: accounts.authentication.password.failure.no_email_found
           description: >
             statsd bucket
@@ -7069,38 +7069,38 @@
         - name: namespace
           type: text
           norms: false
-          doc_values: false          
+          doc_values: false
           ignore_above: 1024
           example: accounts.authentication
           description: >
             statsd bucket namespace
 
         - name: section
-          type: keyword          
+          type: keyword
           ignore_above: 1024
           example: password
           description: >
             statsd bucket section
 
         - name: target
-          type: keyword          
+          type: keyword
           ignore_above: 1024
           example: failure
           description: >
             statsd bucket target (noun)
 
         - name: action
-          type: keyword          
+          type: keyword
           ignore_above: 1024
           example: no_email_found
           description: >
             statsd bucket action (past tense)
-        
+
         - name: val
-          type: long          
+          type: long
           description: >
             value for the bucket
-        
+
         - name: type
           type: keyword
           ignore_above: 1024
@@ -7109,9 +7109,8 @@
 
         - name: ctx
           type: object
-          object_type: keyword          
+          object_type: keyword
           object_type_mapping_type: "*"
-          dynamic: true          
+          dynamic: true
           description: >
             Contains user tags
-                 
