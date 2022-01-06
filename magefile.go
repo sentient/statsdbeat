@@ -20,7 +20,7 @@ import (
 func init() {
 	devtools.SetBuildVariableSources(devtools.DefaultBeatBuildVariableSources)
 
-	devtools.BeatDescription = "One sentence description of the Beat."
+	devtools.BeatDescription = "Forwards statsd UDP packages into elasticsearch"
 	devtools.BeatVendor = "Marco Ensing"
 	devtools.BeatProjectType = devtools.CommunityProject
 	devtools.CrossBuildMountModcache = true
