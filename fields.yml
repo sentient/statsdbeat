@@ -7096,7 +7096,7 @@
           description: >
             statsd bucket action (past tense)
 
-        - name: val
+        - name: value
           type: long
           description: >
             value for the bucket

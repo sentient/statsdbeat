@@ -9971,7 +9971,7 @@ example: no_email_found
 
 --
 
-*`statsd.val`*::
+*`statsd.value`*::
 +
 --
 value for the bucket
