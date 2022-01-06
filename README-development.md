@@ -9,7 +9,7 @@ Ensure that this folder is at the following location:
 
 ### Requirements
 
-* [Golang](https://golang.org/dl/) > 1.7
+* [Golang](https://golang.org/dl/) > 1.17
 
 ### Init Project
 To get running with Statsdbeat and also install the
@@ -76,11 +76,6 @@ echo -n "accounts.authentication.login.num_users:333|g" | nc -u -w0 127.0.0.1 81
 echo -en "n.s.t.cnt1:1|c\n.s.t.nct2:2|c" | nc -u -w0 127.0.0.1 8125
 ```
 
-Test LongTerm
-```
-echo -n "accounts.authentication.login.long_term,lg-1:1|g" | nc -u -w0 127.0.0.1 8127
-```
-
 
 alternatively:
 ```
@@ -139,28 +134,7 @@ make package
 This will fetch and create all images required for the build process. The whole process to finish can take several minutes.
 
 
-
-New for the 7.1. release
-
-```
-mage help
-```
-
-```
-Targets:
-  build                 builds the Beat binary.
-  buildGoDaemon         builds the go-daemon binary (use crossBuildGoDaemon).
-  clean                 cleans all generated files and build artifacts.
-  crossBuild            cross-builds the beat for all target platforms.
-  crossBuildGoDaemon    cross-builds the go-daemon binary using Docker.
-  fields                generates a fields.yml for the Beat.
-  goTestIntegration     executes the Go integration tests.
-  goTestUnit            executes the Go unit tests.
-  golangCrossBuild      build the Beat binary inside of the golang-builder.
-  package               packages the Beat for distribution.
-  testPackages          tests the generated packages (i.e.
-  update                updates the generated files (aka make update).
-```
+## Other stuff
 
 
 ```
@@ -175,19 +149,16 @@ elasticsearch: http://localhost:9200...
   TLS... WARN secure connection disabled
   talk to server... OK
   version: 7.14.2
-  ```
+```
 
-
-  ./statsdbeat setup template
+```
+./statsdbeat setup template
 ILM policy and write alias loading not enabled.
 
 Index setup finished.
+```
 
-
-
-
----
-
+```
 mage
 Targets:
   build               builds the Beat binary.
@@ -202,6 +173,13 @@ Targets:
   package             packages the Beat for distribution.
   test                runs all available tests
   update              updates the generated files (aka make update).
-  
+```
 
-mage check
+
+
+## update security packages
+
+```
+go get github.com/containerd/containerd@v1.5.9
+go get github.com/opencontainers/image-spec@v1.0.2
+```
