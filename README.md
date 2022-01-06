@@ -1,27 +1,28 @@
-# {Beat}
+# Statsdbeat
 
-Welcome to {Beat}.
+Welcome to Statsdbeat.
 
 Ensure that this folder is at the following location:
 `${GOPATH}/src/github.com/sentient/statsdbeat`
 
-## Getting Started with {Beat}
+## Getting Started with Statsdbeat
 
 ### Requirements
 
-* [Golang](https://golang.org/dl/) 1.7
+* [Golang](https://golang.org/dl/) > 1.17
+
 
 ### Init Project
-To get running with {Beat} and also install the
+To get running with Statsdbeat and also install the
 dependencies, run the following command:
 
 ```
-make setup
+mage build
 ```
 
 It will create a clean git history for each major step. Note that you can always rewrite the history if you wish before pushing your changes.
 
-To push {Beat} in the git repository, run the following commands:
+To push Statsdbeat in the git repository, run the following commands:
 
 ```
 git remote set-url origin https://github.com/sentient/statsdbeat
@@ -32,7 +33,7 @@ For further development, check out the [beat developer guide](https://www.elasti
 
 ### Build
 
-To build the binary for {Beat} run the command below. This will generate a binary
+To build the binary for Statsdbeat run the command below. This will generate a binary
 in the same directory with the name statsdbeat.
 
 ```
@@ -42,7 +43,7 @@ make
 
 ### Run
 
-To run {Beat} with debugging output enabled, run:
+To run Statsdbeat with debugging output enabled, run:
 
 ```
 ./statsdbeat -c statsdbeat.yml -e -d "*"
@@ -51,7 +52,7 @@ To run {Beat} with debugging output enabled, run:
 
 ### Test
 
-To test {Beat}, run the following command:
+To test Statsdbeat, run the following command:
 
 ```
 make testsuite
@@ -79,7 +80,7 @@ make update
 
 ### Cleanup
 
-To clean  {Beat} source code, run the following command:
+To clean  Statsdbeat source code, run the following command:
 
 ```
 make fmt
@@ -94,7 +95,7 @@ make clean
 
 ### Clone
 
-To clone {Beat} from the git repository, run the following commands:
+To clone Statsdbeat from the git repository, run the following commands:
 
 ```
 mkdir -p ${GOPATH}/src/github.com/sentient/statsdbeat
