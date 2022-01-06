@@ -6,6 +6,12 @@ statsdbeat:
   # Defines how often an event is sent to the output
   period: 1s
 
+  # udp port the server is listening on for statsd messages. Default 8125
+  statsdserver: ":8125"
+
+  # tcp port the server is listening on for health requests. Can be used when setting up a udp loadbalancer in aws. Default empty
+  # healthserver: ":8126"
+
 # ================================== General ===================================
 
 # The name of the shipper that publishes the network data. It can be used to group
