@@ -1,66 +1,9 @@
 - key: statsdbeat
   title: statsdbeat
-  description: >
-    Statsdbeat module listens for UDP messages (default localhost:8125) that follows the statsd protocol. 
-    The messages are converted to beat.Events and on fixed interval send to Elastic Search.
-
+  description:
   fields:
-    - name: statsd
-      type: group
-      fields:        
-        - name: bucket
-          type: text
-          norms: false          
-          example: accounts.authentication.password.failure.no_email_found
-          description: >
-            statsd bucket
-
-        - name: namespace
-          type: text
-          norms: false
-          doc_values: false          
-          ignore_above: 1024
-          example: accounts.authentication
-          description: >
-            statsd bucket namespace
-
-        - name: section
-          type: keyword          
-          ignore_above: 1024
-          example: password
-          description: >
-            statsd bucket section
-
-        - name: target
-          type: keyword          
-          ignore_above: 1024
-          example: failure
-          description: >
-            statsd bucket target (noun)
-
-        - name: action
-          type: keyword          
-          ignore_above: 1024
-          example: no_email_found
-          description: >
-            statsd bucket action (past tense)
-        
-        - name: val
-          type: long          
-          description: >
-            value for the bucket
-        
-        - name: type
-          type: keyword
-          ignore_above: 1024
-          description: >
-            The type of statsd counter  gauge  histogram.
-
-        - name: ctx
-          type: object
-          object_type: keyword          
-          object_type_mapping_type: "*"
-          dynamic: true          
-          description: >
-            Contains user tags
-                 
+    - name: counter
+      type: long
+      required: true
+      description: >
+        PLEASE UPDATE DOCUMENTATION

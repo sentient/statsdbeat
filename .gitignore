@@ -5,4 +5,3 @@
 /statsdbeat
 /statsdbeat.test
 *.pyc
-/logs

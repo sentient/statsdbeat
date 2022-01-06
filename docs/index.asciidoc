@@ -1,5 +1,5 @@
-= Statsdbeat Docs
+= {Beat} Docs
 
-Welcome to the Statsdbeat documentation.
+Welcome to the {Beat} documentation.
 
 
