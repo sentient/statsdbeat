@@ -29,6 +29,7 @@ type Statsdbeat struct {
 	buffer   []beat.Event
 	mux      sync.Mutex
 	log      *logp.Logger
+	health   *HealthServer
 }
 
 // New creates an instance of statsdbeat.
@@ -53,6 +54,13 @@ func New(b *beat.Beat, cfg *common.Config) (beat.Beater, error) {
 	bt.log.Infof("Statsd server listening for UDP packages at '%v'", c.UDPAddress)
 
 	bt.pipeline = b.Publisher
+
+	if len(c.TCPHealthAddress) > 0 {
+		bt.log.Infof("Setup serving health checks at '%v'", c.TCPHealthAddress)
+		bt.health = NewHealthCheck(c.TCPHealthAddress, bt.log)
+	} else {
+		bt.log.Info("No TCP health check configured. E.g. you could set statsdbeat.healthserver: \":8080\" to respond to TCP health checks")
+	}
 
 	return bt, nil
 }
@@ -111,6 +119,10 @@ func (bt *Statsdbeat) Run(b *beat.Beat) error {
 	}()
 
 	go bt.listenAndBuffer(conn)
+
+	if bt.health != nil {
+		go bt.health.Serve()
+	}
 
 	ticker := time.NewTicker(bt.config.Period)
 
