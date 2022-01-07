@@ -15,9 +15,6 @@ Ensure that this folder is at the following location:
 To get running with Statsdbeat and also install the
 dependencies, run the following command:
 
-```
-make setup
-```
 
 It will create a clean git history for each major step. Note that you can always rewrite the history if you wish before pushing your changes.
 
@@ -25,7 +22,7 @@ To push Statsdbeat in the git repository, run the following commands:
 
 ```
 git remote set-url origin https://github.com/sentient/statsdbeat
-git push origin master
+
 ```
 
 For further development, check out the [beat developer guide](https://www.elastic.co/guide/en/beats/libbeat/current/new-beat.html).
@@ -36,9 +33,8 @@ To build the binary for Statsdbeat run the command below. This will generate a b
 in the same directory with the name statsdbeat.
 
 ```
-make
+mage build
 ```
-
 
 ### Run 
 
@@ -64,8 +60,17 @@ or everything in debug
 To test Statsdbeat, run the following command:
 
 ```
-make testsuite
+mage test
+
+>> go test: Unit Testing
+exec: gotestsum --no-color -f standard-quiet --junitfile build/TEST-go-unit.xml --jsonfile build/TEST-go-unit.out.json -- ./...
+ok      github.com/sentient/statsdbeat/config   0.004s [no tests to run]
+ok      github.com/sentient/statsdbeat/beater   0.021s
+ok      github.com/sentient/statsdbeat  0.045s
+?       github.com/sentient/statsdbeat/cmd      [no test files]
+?       github.com/sentient/statsdbeat/include  [no test files]
 ```
+
 
 Send testdata with 
 ```
@@ -90,7 +95,7 @@ Each beat has a template for the mapping in elasticsearch and a documentation fo
 which is automatically generated based on `fields.yml` by running the following command.
 
 ```
-make update
+mage update
 ```
 
 
@@ -99,8 +104,7 @@ make update
 To clean  Statsdbeat source code, run the following commands:
 
 ```
-make fmt
-make simplify
+mage clean
 ```
 
 To clean up the build directory and generated artifacts, run:
@@ -122,16 +126,6 @@ git clone https://github.com/sentient/statsdbeat ${GOPATH}/src/github.com/sentie
 
 For further development, check out the [beat developer guide](https://www.elastic.co/guide/en/beats/libbeat/current/new-beat.html).
 
-
-## Packaging
-
-The beat frameworks provides tools to crosscompile and package your beat for different platforms. This requires [docker](https://www.docker.com/) and vendoring as described above. To build packages of your beat, run the following command:
-
-```
-make package
-```
-
-This will fetch and create all images required for the build process. The whole process to finish can take several minutes.
 
 
 ## Other stuff
@@ -177,9 +171,36 @@ Targets:
 
 
 
-## update security packages
+## Update security packages
 
 ```
 go get github.com/containerd/containerd@v1.5.9
 go get github.com/opencontainers/image-spec@v1.0.2
 ```
+
+
+## Packaging
+
+The beat frameworks provides tools to crosscompile and package your beat for different platforms. This requires [docker](https://www.docker.com/) and vendoring as described above. To build packages of your beat, run the following command:
+
+```
+mage package
+```
+
+This will fetch and create all images required for the build process. The whole process to finish can take several minutes.
+
+### for just linux 64 
+just build some...
+
+```
+PLATFORMS='linux/arm64' mage package
+
+...
+>> package: Building statsdbeat type=rpm for platform=linux/arm64
+>> package: Building statsdbeat type=deb for platform=linux/arm64
+>> package: Building statsdbeat type=tar.gz for platform=linux/arm64
+...
+```
+
+
+output will be in 'build\distributions'
