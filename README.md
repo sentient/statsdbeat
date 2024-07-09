@@ -1,6 +1,6 @@
 # Statsdbeat
 
-Welcome to Statsdbeat.
+Welcome to Statsdbeat!
 
 Ensure that this folder is at the following location:
 `${GOPATH}/src/github.com/sentient/statsdbeat`
